@@ -113,6 +113,7 @@ CATEGORIES.forEach(function(cat,ci){
     [["ok","異常なし"],["ng","異常あり"],["na","対象外"]].forEach(function(pair){
       var btn=document.createElement("button");btn.type="button";btn.dataset.value=pair[0];btn.textContent=pair[1];
       btn.addEventListener("click",function(){
+        var alreadySelected=btn.classList.contains("selected");
         item.querySelectorAll(".choices button").forEach(function(x){
           x.classList.remove("selected","ok","ng","na");
           x.style.backgroundColor="";
@@ -120,7 +121,13 @@ CATEGORIES.forEach(function(cat,ci){
           x.style.borderColor="";
           x.style.boxShadow="";
         });
-        item.classList.remove("state-ok","state-ng","state-na");
+        item.classList.remove("state-ok","state-ng","state-na","is-ng");
+        item.style.borderColor="";
+        item.style.backgroundColor="";
+        if(alreadySelected){
+          updateStats();
+          return;
+        }
         btn.classList.add("selected",pair[0]);
         item.classList.add("state-"+pair[0]);
         if(pair[0]==="ok"){
