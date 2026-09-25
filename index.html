@@ -172,7 +172,7 @@ body.appendChild(meta);
 CATEGORIES.forEach(function(cat){
   var sec=document.createElement("div");sec.className="detailSection";
   var h=document.createElement("h3");h.textContent=cat.name;sec.appendChild(h);
-  r.checks.filter(function(ch){var idx=Number(ch.index);return idx>=cat.start&&idx<=cat.end}).forEach(function(ch){
+  r.checks.forEach(function(ch,pos){var idx=(ch.index!==undefined&&ch.index!==null)?Number(ch.index):pos;if(idx<cat.start||idx>cat.end)return;
     var item=document.createElement("div");item.className="detailItem";
     var status=ch.status==="ok"?"異常なし":ch.status==="ng"?"異常あり":ch.status==="na"?"対象外":"未入力";
     item.innerHTML="<div class='name'>"+escapeHtml(ch.item)+"</div><div class='result'>"+status+"</div>"+
