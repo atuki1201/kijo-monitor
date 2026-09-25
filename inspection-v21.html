@@ -60,7 +60,7 @@ button{font:inherit;cursor:pointer}.primary{width:100%;margin-top:14px;padding:1
 </div>
 <div id="historyDetail" class="hidden historyDetail">
   <div class="card">
-    <div class="detailHead"><h2 style="margin:0">記録詳細</h2><button type="button" class="backBtn" id="historyBackButton" onclick="showHistory()">一覧に戻る</button></div>
+    <div class="detailHead"><h2 style="margin:0">記録詳細</h2><button type="button" class="backBtn" id="historyBackButton" onclick="window.showHistory()">一覧に戻る</button></div>
     <div id="historyDetailBody" style="margin-top:12px"></div>
   </div>
 </div>
@@ -404,6 +404,7 @@ records.forEach(function(r){
   div.appendChild(btn);box.appendChild(div);
 });
 }
+window.showHistory=showHistory;
 function showRecordDetail(id){
 var records=read(REC_KEY,[]),r=records.find(function(x){return x.id===id});if(!r)return;
 $("historyListWrap").classList.add("hidden");$("historyDetail").classList.remove("hidden");
@@ -481,6 +482,10 @@ if("serviceWorker" in navigator){
 if("caches" in window){
   caches.keys().then(function(keys){keys.forEach(function(key){if(key.indexOf("kijo-")===0)caches.delete(key);});}).catch(function(){});
 }
+document.addEventListener("click",function(event){
+  var back=event.target.closest("#historyBackButton");
+  if(back){event.preventDefault();showHistory();}
+});
 function boot(){user=read(USER_KEY,null);facilities=read(FAC_KEY,[]);current=read(CURRENT_KEY,null);$("registerUserButton").addEventListener("click",registerUser);$("registerFacilityButton").addEventListener("click",registerFacility);$("saveRecordButton").addEventListener("click",saveRecord);
 $("exportCsvButton").addEventListener("click",exportCsv);
 $("exportJsonButton").addEventListener("click",exportJson);$("footerSave").addEventListener("click",saveRecord);$("footerSwitch").addEventListener("click",switchFacility);$("switchFacilityButton").addEventListener("click",switchFacility);setupTabs();buildChecks();runAll37SelfTest();if($("historyBackButton"))$("historyBackButton").addEventListener("click",showHistory);if(user){showUser();if(current)startFacility(current)}else{$("facilityCard").classList.add("hidden");$("facilityListCard").classList.add("hidden")}setDate()}
