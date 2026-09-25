@@ -22,7 +22,7 @@ footer{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px sol
 <header><h1>施設監視</h1><div class="sub"><span id="headFacility">施設未選択</span> ｜ <span id="headUser">使用者未登録</span></div></header>
 <main>
 <section id="setup">
-<div class="card" id="userCard"><h2>このスマホの使用者</h2><div class="hint">最初だけ登録します。</div><label>名前</label><input id="userName" placeholder="例：田村"><label>役割（任意）</label><input id="userRole" placeholder="例：水管理担当"><button class="btn primary" id="saveUser" style="width:100%;margin-top:12px">使用者を登録</button></div>
+<div class="card" id="userCard"><h2>このスマホの使用者</h2><div class="hint">最初だけ登録します。</div><label>名前</label><input id="userName" placeholder="例：田村"><label>役割（任意）</label><input id="userRole" placeholder="例：水管理担当"><button type="button" class="btn primary" id="saveUser" style="width:100%;margin-top:12px">使用者を登録</button></div>
 <div class="card hidden" id="facCard"><h2>施設登録</h2><label>施設名</label><input id="facName" placeholder="例：ジンノウチ機場"><label>施設番号（任意）</label><input id="facNo" placeholder="例：M-001"><button class="btn primary" id="addFac" style="width:100%;margin-top:12px">施設を登録</button></div>
 <div class="card hidden" id="facListCard"><h2>登録済み施設</h2><div id="facList"></div></div>
 </section>
@@ -39,4 +39,4 @@ footer{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px sol
 <div id="settings" class="view hidden"><div class="card"><h2>設定</h2><label>使用者</label><input id="setUser" readonly><label>施設</label><select id="setFac"></select><button class="btn primary" id="changeFac" style="width:100%;margin-top:12px">この施設に切り替える</button><button class="btn" id="changeUser" style="width:100%;margin-top:8px">使用者名を変更</button></div></div>
 </section></main>
 <footer id="footer" class="hidden"><button class="btn" id="switch">施設切替</button><button class="btn primary" id="saveBottom">保存</button></footer>
-<script src="checks.js?v=7"></script><script src="app.js?v=7"></script></body></html>
+<script src="checks.js?v=8"></script><script src="app.js?v=8"></script></body></html>
