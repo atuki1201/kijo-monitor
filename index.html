@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1f5f4a">
-<title>施設監視 v15</title>
+<title>施設監視 v16</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f4f7f5;color:#1d2722;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif}
 header{background:#1f5f4a;color:white;padding:18px 16px}h1{font-size:20px;margin:0 0 5px}.sub{font-size:13px}
@@ -117,8 +117,30 @@ function applyItemState(item,value){
   if(value==="ng") item.classList.add("state-ng","is-ng");
   if(value==="na") item.classList.add("state-na");
 }
+function paintButton(btn,value){
+  btn.classList.remove("selected","ok","ng","na");
+  btn.style.backgroundColor="#fff";
+  btn.style.color="#1d2722";
+  btn.style.borderColor="#c7d2cc";
+  btn.style.boxShadow="none";
+  if(value){
+    btn.classList.add("selected",value);
+    var bg=value==="ok"?"#2e9f5b":value==="ng"?"#d83a3a":"#68756f";
+    btn.style.backgroundColor=bg;
+    btn.style.color="#fff";
+    btn.style.borderColor=bg;
+    btn.style.boxShadow="0 0 0 2px rgba(31,95,74,.18)";
+  }
+}
+function applyItemState(item,value){
+  item.classList.remove("state-ok","state-ng","state-na","is-ng");
+  if(value==="ok") item.classList.add("state-ok");
+  if(value==="ng") item.classList.add("state-ng","is-ng");
+  if(value==="na") item.classList.add("state-na");
+}
 function buildChecks(){
 var box=$("checkList");box.innerHTML="";
+var choiceDefs=[["ok","異常なし"],["ng","異常あり"],["na","対象外"]];
 CATEGORIES.forEach(function(cat,ci){
   var sec=document.createElement("div");sec.className="checkSection";
   var head=document.createElement("button");head.type="button";head.className="sectionHead";
@@ -131,17 +153,18 @@ CATEGORIES.forEach(function(cat,ci){
     var item=document.createElement("div");item.className="item";item.dataset.index=i;
     var title=document.createElement("b");title.textContent=CHECKS[i];item.appendChild(title);
     var choices=document.createElement("div");choices.className="choices";
-    [["ok","異常なし"],["ng","異常あり"],["na","対象外"]].forEach(function(pair){
+    choiceDefs.forEach(function(pair){
       var btn=document.createElement("button");
       btn.type="button";btn.dataset.value=pair[0];btn.textContent=pair[1];
       paintButton(btn,"");
       btn.addEventListener("click",function(){
-        var currentValue=item.getAttribute("data-status") || "";
-        var nextValue=currentValue===pair[0] ? "" : pair[0];
-        item.querySelectorAll(".choices button").forEach(function(x){paintButton(x,nextValue && x===btn ? nextValue : "");});
-        if(nextValue) item.setAttribute("data-status",nextValue);
-        else item.removeAttribute("data-status");
-        applyItemState(item,nextValue);
+        var current=item.getAttribute("data-status")||"";
+        var next=current===pair[0]?"":pair[0];
+        item.querySelectorAll(".choices button").forEach(function(other){
+          paintButton(other,next && other===btn ? next : "");
+        });
+        if(next)item.setAttribute("data-status",next);else item.removeAttribute("data-status");
+        applyItemState(item,next);
         updateStats();
       });
       choices.appendChild(btn);
@@ -153,34 +176,43 @@ CATEGORIES.forEach(function(cat,ci){
   }
   head.addEventListener("click",function(){
     var open=!body.classList.contains("hidden");
-    body.classList.toggle("hidden");
-    chev.textContent=open?"▼":"▲";
+    body.classList.toggle("hidden");chev.textContent=open?"▼":"▲";
   });
   sec.appendChild(head);sec.appendChild(body);box.appendChild(sec);
 });
-}function updateStats(){
+}
+function updateStats(){
 var items=document.querySelectorAll("#checkList .item"),done=0,ng=0;
 items.forEach(function(item){
-  var status=item.getAttribute("data-status") || "";
+  var status=item.getAttribute("data-status")||"";
   if(status){done++;if(status==="ng")ng++}
 });
-$("doneCount").textContent=done;$("ngCount").textContent=ng;$("leftCount").textContent=CHECKS.length-done;
+$("doneCount").textContent=done;
+$("ngCount").textContent=ng;
+$("leftCount").textContent=CHECKS.length-done;
 CATEGORIES.forEach(function(cat,ci){
-  var count=0,sectionItems=document.querySelectorAll("#checkList .item");
-  sectionItems.forEach(function(item){var idx=Number(item.dataset.index);if(idx>=cat.start&&idx<=cat.end&&item.querySelector(".selected"))count++});
-  var el=$("sectionCount"+ci);if(el)el.textContent=count+"/"+(cat.end-cat.start+1)+"済";
+  var count=0;
+  document.querySelectorAll("#checkList .item").forEach(function(item){
+    var idx=Number(item.dataset.index);
+    if(idx>=cat.start&&idx<=cat.end&&item.getAttribute("data-status"))count++;
+  });
+  var el=$("sectionCount"+ci);
+  if(el)el.textContent=count+"/"+(cat.end-cat.start+1)+"済";
 });
-}function newRecord(){
+}
+function newRecord(){
 $("finding").value="";$("special").value="";
 document.querySelectorAll("#checkList .item").forEach(function(item){
   item.classList.remove("state-ok","state-ng","state-na","is-ng");
   item.removeAttribute("data-status");
-  item.style.borderColor="";item.style.backgroundColor="";
+  item.style.borderColor="";
+  item.style.backgroundColor="";
   item.querySelectorAll(".choices button").forEach(function(btn){paintButton(btn,"");});
 });
 document.querySelectorAll("#checkList input,#checkList textarea").forEach(function(x){x.value=""});
 setDate();updateStats();
-}function collectRecord(){
+}
+function collectRecord(){
 var checks=[];
 document.querySelectorAll("#checkList .item").forEach(function(item){
   var i=Number(item.dataset.index),status=item.getAttribute("data-status") || "";
@@ -226,6 +258,33 @@ var common=document.createElement("div");common.className="detailSection";
 common.innerHTML="<h3>全体記録</h3><div class='detailItem'><div class='name'>所見</div><div class='comment'>"+(r.finding?escapeHtml(r.finding):"なし")+"</div></div><div class='detailItem'><div class='name'>特記事項</div><div class='comment'>"+(r.special?escapeHtml(r.special):"なし")+"</div></div>";
 body.appendChild(common);
 }function escapeHtml(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function runCheckSelfTest(){
+  var test=document.createElement("div");
+  test.className="item";
+  test.innerHTML="<div class='choices'></div>";
+  var box=test.querySelector(".choices");
+  var defs=[["ok","異常なし"],["ng","異常あり"],["na","対象外"]];
+  defs.forEach(function(pair){
+    var b=document.createElement("button");b.type="button";b.dataset.value=pair[0];b.textContent=pair[1];paintButton(b,"");
+    b.addEventListener("click",function(){
+      var current=test.getAttribute("data-status")||"";
+      var next=current===pair[0]?"":pair[0];
+      box.querySelectorAll("button").forEach(function(x){paintButton(x,next&&x===b?next:"");});
+      if(next)test.setAttribute("data-status",next);else test.removeAttribute("data-status");
+    });
+    box.appendChild(b);
+  });
+  document.body.appendChild(test);
+  var bs=test.querySelectorAll("button");
+  bs[0].click();
+  var ok1=getComputedStyle(bs[0]).backgroundColor!=="rgb(255, 255, 255)" && !test.querySelectorAll("button")[1].classList.contains("selected");
+  bs[1].click();
+  var ok2=getComputedStyle(bs[0]).backgroundColor==="rgb(255, 255, 255)" && getComputedStyle(bs[1]).backgroundColor!=="rgb(255, 255, 255)";
+  bs[1].click();
+  var ok3=getComputedStyle(bs[1]).backgroundColor==="rgb(255, 255, 255, 1)" || getComputedStyle(bs[1]).backgroundColor==="rgb(255, 255, 255)";
+  test.remove();
+  return !!(ok1&&ok2&&ok3);
+}
 function setupTabs(){document.querySelectorAll(".tab").forEach(function(tab){tab.addEventListener("click",function(){document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("active")});tab.classList.add("active");$("entryPage").classList.add("hidden");$("historyPage").classList.add("hidden");$("settingsPage").classList.add("hidden");if(tab.dataset.page==="entry")$("entryPage").classList.remove("hidden");if(tab.dataset.page==="history"){showHistory();$("historyPage").classList.remove("hidden")}if(tab.dataset.page==="settings")$("settingsPage").classList.remove("hidden")})})}
 function switchFacility(){$("setup").classList.remove("hidden");$("app").classList.add("hidden");$("appFooter").classList.add("hidden");showUser()}
 if("serviceWorker" in navigator){
@@ -234,7 +293,7 @@ if("serviceWorker" in navigator){
 if("caches" in window){
   caches.keys().then(function(keys){keys.forEach(function(key){if(key.indexOf("kijo-")===0)caches.delete(key);});}).catch(function(){});
 }
-function boot(){user=read(USER_KEY,null);facilities=read(FAC_KEY,[]);current=read(CURRENT_KEY,null);$("registerUserButton").addEventListener("click",registerUser);$("registerFacilityButton").addEventListener("click",registerFacility);$("saveRecordButton").addEventListener("click",saveRecord);$("footerSave").addEventListener("click",saveRecord);$("footerSwitch").addEventListener("click",switchFacility);$("switchFacilityButton").addEventListener("click",switchFacility);setupTabs();buildChecks();$("historyBackButton").addEventListener("click",showHistory);if(user){showUser();if(current)startFacility(current)}else{$("facilityCard").classList.add("hidden");$("facilityListCard").classList.add("hidden")}setDate()}
+function boot(){user=read(USER_KEY,null);facilities=read(FAC_KEY,[]);current=read(CURRENT_KEY,null);$("registerUserButton").addEventListener("click",registerUser);$("registerFacilityButton").addEventListener("click",registerFacility);$("saveRecordButton").addEventListener("click",saveRecord);$("footerSave").addEventListener("click",saveRecord);$("footerSwitch").addEventListener("click",switchFacility);$("switchFacilityButton").addEventListener("click",switchFacility);setupTabs();buildChecks();runCheckSelfTest();$("historyBackButton").addEventListener("click",showHistory);if(user){showUser();if(current)startFacility(current)}else{$("facilityCard").classList.add("hidden");$("facilityListCard").classList.add("hidden")}setDate()}
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",boot)}else{boot()}
 })();
 </script>
