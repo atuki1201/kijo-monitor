@@ -49,7 +49,15 @@ button{font:inherit;cursor:pointer}.primary{width:100%;margin-top:14px;padding:1
 <div class="card"><h2>全体記録</h2><label>所見</label><textarea id="finding"></textarea><label>特記事項</label><textarea id="special"></textarea><button type="button" class="primary" id="saveRecordButton">この記録を保存</button></div>
 </div>
 <div id="historyPage" class="hidden">
-<div id="historyListWrap" class="card"><h2>記録一覧</h2><div id="historyList"></div></div>
+<div id="historyListWrap" class="card">
+<h2>記録一覧</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px">
+<button type="button" class="secondary" id="exportCsvButton">CSV出力</button>
+<button type="button" class="secondary" id="exportJsonButton">JSONバックアップ</button>
+</div>
+<div class="notice" style="margin-bottom:10px">CSVはExcelで開けます。JSONは記録をそのままバックアップするときに使います。</div>
+<div id="historyList"></div>
+</div>
 <div id="historyDetail" class="hidden historyDetail">
   <div class="card">
     <div class="detailHead"><h2 style="margin:0">記録詳細</h2><button type="button" class="backBtn" id="historyBackButton">一覧に戻る</button></div>
@@ -351,6 +359,37 @@ return {
 };
 }
 function saveRecord(){if(!current){window.alert("先に施設を選択してください。");return}var records=read(REC_KEY,[]);records.unshift(collectRecord());if(write(REC_KEY,records)){window.alert("記録を保存しました。");newRecord();showHistory()}}
+function downloadFile(filename,content,mime){
+  var blob=new Blob([content],{type:mime});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement("a");
+  a.href=url;a.download=filename;document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(url);a.remove()},1000);
+}
+function csvEscape(value){
+  var s=String(value==null?"":value);
+  return '"'+s.replace(/"/g,'""')+'"';
+}
+function exportCsv(){
+  var records=read(REC_KEY,[]);
+  if(!records.length){window.alert("保存された記録がありません。");return}
+  var rows=[["記録ID","点検日時","施設","使用者","区分","点検項目","判定","位置・状況","コメント","所見","特記事項","保存日時"]];
+  records.slice().reverse().forEach(function(r){
+    r.checks.forEach(function(ch){
+      rows.push([r.id,r.inspectDate,r.facility,r.user,ch.category||"",ch.item,ch.status==="ok"?"異常なし":ch.status==="ng"?"異常あり":ch.status==="na"?"対象外":"未入力",ch.location||"",ch.comment||"",r.finding||"",r.special||"",r.savedAt||""]);
+    });
+  });
+  var csv="\uFEFF"+rows.map(function(row){return row.map(csvEscape).join(",")}).join("\r\n");
+  var stamp=new Date().toISOString().slice(0,19).replace(/[:T]/g,"-");
+  downloadFile("施設監視記録_"+stamp+".csv",csv,"text/csv;charset=utf-8");
+}
+function exportJson(){
+  var records=read(REC_KEY,[]);
+  if(!records.length){window.alert("保存された記録がありません。");return}
+  var payload={exportedAt:new Date().toISOString(),user:user,facilities:facilities,records:records};
+  var stamp=new Date().toISOString().slice(0,19).replace(/[:T]/g,"-");
+  downloadFile("施設監視バックアップ_"+stamp+".json",JSON.stringify(payload,null,2),"application/json;charset=utf-8");
+}
 function showHistory(){
 $("historyListWrap").classList.remove("hidden");$("historyDetail").classList.add("hidden");
 var records=read(REC_KEY,[]),box=$("historyList");box.innerHTML="";
@@ -442,7 +481,9 @@ if("serviceWorker" in navigator){
 if("caches" in window){
   caches.keys().then(function(keys){keys.forEach(function(key){if(key.indexOf("kijo-")===0)caches.delete(key);});}).catch(function(){});
 }
-function boot(){user=read(USER_KEY,null);facilities=read(FAC_KEY,[]);current=read(CURRENT_KEY,null);$("registerUserButton").addEventListener("click",registerUser);$("registerFacilityButton").addEventListener("click",registerFacility);$("saveRecordButton").addEventListener("click",saveRecord);$("footerSave").addEventListener("click",saveRecord);$("footerSwitch").addEventListener("click",switchFacility);$("switchFacilityButton").addEventListener("click",switchFacility);setupTabs();buildChecks();runAll37SelfTest();$("historyBackButton").addEventListener("click",showHistory);if(user){showUser();if(current)startFacility(current)}else{$("facilityCard").classList.add("hidden");$("facilityListCard").classList.add("hidden")}setDate()}
+function boot(){user=read(USER_KEY,null);facilities=read(FAC_KEY,[]);current=read(CURRENT_KEY,null);$("registerUserButton").addEventListener("click",registerUser);$("registerFacilityButton").addEventListener("click",registerFacility);$("saveRecordButton").addEventListener("click",saveRecord);
+$("exportCsvButton").addEventListener("click",exportCsv);
+$("exportJsonButton").addEventListener("click",exportJson);$("footerSave").addEventListener("click",saveRecord);$("footerSwitch").addEventListener("click",switchFacility);$("switchFacilityButton").addEventListener("click",switchFacility);setupTabs();buildChecks();runAll37SelfTest();$("historyBackButton").addEventListener("click",showHistory);if(user){showUser();if(current)startFacility(current)}else{$("facilityCard").classList.add("hidden");$("facilityListCard").classList.add("hidden")}setDate()}
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",boot)}else{boot()}
 })();
 </script>
