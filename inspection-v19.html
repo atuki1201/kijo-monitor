@@ -273,7 +273,9 @@ return {
   special:$("special").value,
   checks:checks,
   savedAt:new Date().toISOString()
-}function saveRecord(){if(!current){window.alert("先に施設を選択してください。");return}var records=read(REC_KEY,[]);records.unshift(collectRecord());if(write(REC_KEY,records)){window.alert("記録を保存しました。");newRecord();showHistory()}}
+};
+}
+function saveRecord(){if(!current){window.alert("先に施設を選択してください。");return}var records=read(REC_KEY,[]);records.unshift(collectRecord());if(write(REC_KEY,records)){window.alert("記録を保存しました。");newRecord();showHistory()}}
 function showHistory(){
 $("historyListWrap").classList.remove("hidden");$("historyDetail").classList.add("hidden");
 var records=read(REC_KEY,[]),box=$("historyList");box.innerHTML="";
