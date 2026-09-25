@@ -174,8 +174,24 @@ CATEGORIES.forEach(function(cat,ci){
   sectionItems.forEach(function(item){var idx=Number(item.dataset.index);if(idx>=cat.start&&idx<=cat.end&&item.querySelector(".selected"))count++});
   var el=$("sectionCount"+ci);if(el)el.textContent=count+"/"+(cat.end-cat.start+1)+"済";
 });
-}function newRecord(){$("finding").value="";$("special").value="";document.querySelectorAll("#checkList .selected").forEach(function(b){b.classList.remove("selected")});document.querySelectorAll("#checkList .is-ng").forEach(function(x){x.classList.remove("is-ng")});
-document.querySelectorAll("#checkList .item").forEach(function(x){x.classList.remove("state-ok","state-ng","state-na","is-ng");x.removeAttribute("data-status");x.style.borderColor="";x.style.backgroundColor=""});document.querySelectorAll("#checkList input,#checkList textarea").forEach(function(x){x.value=""});setDate();updateStats()}
+}function newRecord(){
+$("finding").value="";$("special").value="";
+document.querySelectorAll("#checkList .item").forEach(function(x){
+  x.classList.remove("state-ok","state-ng","state-na","is-ng");
+  x.removeAttribute("data-status");
+  x.style.borderColor="";x.style.backgroundColor="";
+  x.querySelectorAll(".choices button").forEach(function(b){
+    b.classList.remove("selected","ok","ng","na");
+    b.style.setProperty("background","#fff","important");
+    b.style.setProperty("background-color","#fff","important");
+    b.style.setProperty("color","#1d2722","important");
+    b.style.setProperty("border","1px solid #c7d2cc","important");
+    b.style.setProperty("border-color","#c7d2cc","important");
+    b.style.setProperty("box-shadow","none","important");
+  });
+});
+document.querySelectorAll("#checkList input,#checkList textarea").forEach(function(x){x.value=""});
+setDate();updateStats()}
 function collectRecord(){
 var checks=[];
 document.querySelectorAll("#checkList .item").forEach(function(item){
