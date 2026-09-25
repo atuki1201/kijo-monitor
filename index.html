@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1f5f4a">
-<title>施設監視</title>
+<title>施設監視 v12</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f4f7f5;color:#1d2722;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif}
 header{background:#1f5f4a;color:white;padding:18px 16px}h1{font-size:20px;margin:0 0 5px}.sub{font-size:13px}
@@ -112,6 +112,10 @@ CATEGORIES.forEach(function(cat,ci){
     var choices=document.createElement("div");choices.className="choices";
     [["ok","異常なし"],["ng","異常あり"],["na","対象外"]].forEach(function(pair){
       var btn=document.createElement("button");btn.type="button";btn.dataset.value=pair[0];btn.textContent=pair[1];
+      btn.style.setProperty("background","#fff","important");
+      btn.style.setProperty("color","#1d2722","important");
+      btn.style.setProperty("border","1px solid #c7d2cc","important");
+      btn.style.setProperty("box-shadow","none","important");
       btn.addEventListener("click",function(){
         var currentValue=item.getAttribute("data-status") || "";
         var nextValue=(currentValue===pair[0]) ? "" : pair[0];
@@ -124,10 +128,12 @@ CATEGORIES.forEach(function(cat,ci){
 
         item.querySelectorAll(".choices button").forEach(function(x){
           x.classList.remove("selected","ok","ng","na");
-          x.style.backgroundColor="";
-          x.style.color="";
-          x.style.borderColor="";
-          x.style.boxShadow="";
+          x.style.setProperty("background","#fff","important");
+          x.style.setProperty("background-color","#fff","important");
+          x.style.setProperty("color","#1d2722","important");
+          x.style.setProperty("border","1px solid #c7d2cc","important");
+          x.style.setProperty("border-color","#c7d2cc","important");
+          x.style.setProperty("box-shadow","none","important");
         });
 
         if(nextValue===""){
@@ -218,6 +224,12 @@ body.appendChild(common);
 }function escapeHtml(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
 function setupTabs(){document.querySelectorAll(".tab").forEach(function(tab){tab.addEventListener("click",function(){document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("active")});tab.classList.add("active");$("entryPage").classList.add("hidden");$("historyPage").classList.add("hidden");$("settingsPage").classList.add("hidden");if(tab.dataset.page==="entry")$("entryPage").classList.remove("hidden");if(tab.dataset.page==="history"){showHistory();$("historyPage").classList.remove("hidden")}if(tab.dataset.page==="settings")$("settingsPage").classList.remove("hidden")})})}
 function switchFacility(){$("setup").classList.remove("hidden");$("app").classList.add("hidden");$("appFooter").classList.add("hidden");showUser()}
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.getRegistrations().then(function(regs){regs.forEach(function(reg){reg.unregister();});}).catch(function(){});
+}
+if("caches" in window){
+  caches.keys().then(function(keys){keys.forEach(function(key){if(key.indexOf("kijo-")===0)caches.delete(key);});}).catch(function(){});
+}
 function boot(){user=read(USER_KEY,null);facilities=read(FAC_KEY,[]);current=read(CURRENT_KEY,null);$("registerUserButton").addEventListener("click",registerUser);$("registerFacilityButton").addEventListener("click",registerFacility);$("saveRecordButton").addEventListener("click",saveRecord);$("footerSave").addEventListener("click",saveRecord);$("footerSwitch").addEventListener("click",switchFacility);$("switchFacilityButton").addEventListener("click",switchFacility);setupTabs();buildChecks();$("historyBackButton").addEventListener("click",showHistory);if(user){showUser();if(current)startFacility(current)}else{$("facilityCard").classList.add("hidden");$("facilityListCard").classList.add("hidden")}setDate()}
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",boot)}else{boot()}
 })();
