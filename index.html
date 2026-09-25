@@ -1,116 +1,98 @@
 <!doctype html>
-<html lang="ja"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1f5f4a"><link rel="manifest" href="manifest.json"><title>施設監視</title>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1f5f4a">
+<title>施設監視</title>
 <style>
-:root{--g:#1f5f4a;--bg:#f4f7f5;--b:#d7e1db;--mut:#687770;--red:#b63232}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#1d2722;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif}
-header{background:var(--g);color:#fff;padding:14px 16px calc(12px + env(safe-area-inset-top));position:sticky;top:0;z-index:10}h1{font-size:18px;margin:0 0 5px}.sub{font-size:12px;opacity:.9}
-main{max-width:780px;margin:auto;padding:12px 12px 92px}.card{background:#fff;border:1px solid var(--b);border-radius:14px;padding:14px;margin:10px 0}.hidden{display:none!important}
-h2{font-size:16px;margin:0 0 10px}.hint,.small{font-size:12px;color:var(--mut)}label{display:block;font-size:12px;font-weight:800;color:#52615b;margin:9px 0 5px}
-input,select,textarea{width:100%;font-size:16px;border:1px solid #cbd6d0;border-radius:10px;padding:11px;background:#fff}textarea{min-height:80px}.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-button{font:inherit}.btn{border:1px solid #cbd6d0;background:#fff;border-radius:10px;padding:11px 8px;font-weight:800;font-size:13px}.primary{background:var(--g);color:#fff;border:0}
-.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px}.tab{border:0;background:#fff;border:1px solid var(--b);border-radius:10px;padding:11px 3px;font-size:12px;font-weight:800}.tab.active{background:var(--g);color:#fff}
-.section{font-size:13px;color:var(--g);font-weight:900;margin:15px 0 7px}.item{border:1px solid var(--b);border-radius:12px;padding:11px;margin:8px 0}.item-title{font-size:13px;font-weight:800;line-height:1.45}
-.choice{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}.choice .active.ok{background:#eaf7ef;border-color:#77bb92;color:#19673d}.choice .active.ng{background:#fff0f0;border-color:#e28c8c;color:#9f2929}.choice .active.na{background:#f0f3f2;color:#52615d}.extra{display:none}.item.ng .extra{display:block}
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.kpi{background:#edf6f1;border-radius:10px;padding:8px;text-align:center}.kpi b{display:block;color:var(--g);font-size:19px}.kpi span{font-size:10px;color:var(--mut)}
-.record{padding:12px;border:1px solid var(--b);border-radius:12px;margin:8px 0}.record-head{display:flex;justify-content:space-between;gap:8px}.badge{padding:3px 7px;border-radius:99px;background:#eaf1ee;color:var(--g);font-size:10px;font-weight:900}.ng{color:var(--red)}
-footer{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--b);padding:9px 12px calc(9px + env(safe-area-inset-bottom));display:flex;gap:7px;z-index:20}footer .btn{flex:1}
-@media(max-width:460px){.row2{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
-</style></head>
+*{box-sizing:border-box}body{margin:0;background:#f4f7f5;color:#1d2722;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif}
+header{background:#1f5f4a;color:white;padding:18px 16px}h1{font-size:20px;margin:0 0 5px}.sub{font-size:13px}
+main{max-width:760px;margin:auto;padding:14px 12px 100px}.card{background:white;border:1px solid #d7e1db;border-radius:14px;padding:16px;margin-bottom:12px}h2{font-size:17px;margin:0 0 12px}
+label{display:block;font-size:13px;font-weight:bold;margin:12px 0 6px}input,select,textarea{width:100%;padding:13px;border:1px solid #cbd6d0;border-radius:10px;font-size:16px;background:white}textarea{min-height:80px}
+button{font:inherit;cursor:pointer}.primary{width:100%;margin-top:14px;padding:14px;border:0;border-radius:11px;background:#1f5f4a;color:white;font-weight:bold;font-size:16px}.secondary{padding:11px;border:1px solid #ccd6d1;background:white;border-radius:10px;font-weight:bold}
+.hidden{display:none!important}.facility{display:flex;justify-content:space-between;align-items:center;border:1px solid #d7e1db;border-radius:11px;padding:12px;margin:8px 0}.facility button{margin-left:8px}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}.tab{padding:11px 4px;border:1px solid #d7e1db;border-radius:10px;background:white;font-weight:bold;font-size:12px}.tab.active{background:#1f5f4a;color:white}
+.item{border:1px solid #d7e1db;border-radius:11px;padding:12px;margin:8px 0}.item b{font-size:13px}.choices{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}.choices button{padding:10px 3px;border:1px solid #ccd6d1;background:white;border-radius:9px;font-weight:bold;font-size:12px}.choices button.selected.ok{background:#eaf7ef}.choices button.selected.ng{background:#fff0f0}.choices button.selected.na{background:#eef1f0}.detail{display:none}.item.is-ng .detail{display:block}.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.kpi{background:#edf6f1;border-radius:10px;padding:9px;text-align:center}.kpi strong{display:block;font-size:20px;color:#1f5f4a}.kpi span{font-size:11px}
+#appFooter{position:fixed;left:0;right:0;bottom:0;background:white;border-top:1px solid #d7e1db;padding:9px 12px calc(9px + env(safe-area-inset-bottom));display:flex;gap:7px}#appFooter button{flex:1}
+.notice{background:#fff7df;border:1px solid #ead28b;padding:11px;border-radius:10px;font-size:12px}
+</style>
+</head>
 <body>
-<header><h1>施設監視</h1><div class="sub"><span id="headFacility">施設未選択</span> ｜ <span id="headUser">使用者未登録</span></div></header>
+<header><h1>施設監視</h1><div class="sub"><span id="headerFacility">施設未選択</span> ｜ <span id="headerUser">使用者未登録</span></div></header>
 <main>
 <section id="setup">
-<div class="card" id="userCard"><h2>このスマホの使用者</h2><div class="hint">最初だけ登録します。</div><label>名前</label><input id="userName" placeholder="例：田村"><label>役割（任意）</label><input id="userRole" placeholder="例：水管理担当"><button type="button" onclick="registerUser()" class="btn primary" id="saveUser" style="width:100%;margin-top:12px">使用者を登録</button></div>
-<div class="card hidden" id="facCard"><h2>施設登録</h2><label>施設名</label><input id="facName" placeholder="例：ジンノウチ機場"><label>施設番号（任意）</label><input id="facNo" placeholder="例：M-001"><button class="btn primary" id="addFac" style="width:100%;margin-top:12px">施設を登録</button></div>
-<div class="card hidden" id="facListCard"><h2>登録済み施設</h2><div id="facList"></div></div>
-</section>
-<section id="app" class="hidden">
-<div class="tabs"><button class="tab active" data-v="entry">点検入力</button><button class="tab" data-v="history">記録一覧</button><button class="tab" data-v="backup">出力・取込</button><button class="tab" data-v="settings">設定</button></div>
-<div id="entry" class="view">
-<div class="card"><h2>点検記録</h2><div class="row2"><div><label>点検日時</label><input id="inspectAt" type="datetime-local"></div><div><label>前回点検日</label><input id="prevAt" type="date"></div></div><label>重要度</label><select id="importance"><option>S-5</option><option>S-4</option><option>S-3</option><option>S-2</option><option>S-1</option></select><div class="kpis" style="margin-top:12px"><div class="kpi"><b id="done">0</b><span>点検済み</span></div><div class="kpi"><b id="ngCount">0</b><span>異常あり</span></div><div class="kpi"><b id="left">37</b><span>未入力</span></div><div class="kpi"><b id="pdone">0</b><span>定点</span></div></div></div>
-<div class="card"><h2>日常点検</h2><div class="hint">各項目をタップ。「異常あり」のときだけ詳細を入力します。</div><div id="checks"></div></div>
-<div class="card"><h2>施設監視（定点）</h2><div id="points"></div></div>
-<div class="card"><h2>全体記録</h2><label>施設情報</label><input id="facilityInfo"><label>住所</label><input id="address"><label>所見</label><textarea id="finding"></textarea><label>特記事項</label><textarea id="special"></textarea><button class="btn primary" id="saveRecord" style="width:100%;margin-top:12px">この記録を保存</button></div>
+<div class="card" id="userCard">
+<h2>このスマホの使用者</h2><div class="notice">最初に名前を登録してください。</div>
+<label for="userName">名前</label><input id="userName" type="text" autocomplete="name" placeholder="例：田村">
+<label for="userRole">役割（任意）</label><input id="userRole" type="text" placeholder="例：水管理担当">
+<button type="button" class="primary" id="registerUserButton">使用者を登録</button>
 </div>
-<div id="history" class="view hidden"><div class="card"><h2>記録一覧</h2><div class="row2"><div><label>施設</label><select id="filterFac"><option value="">すべて</option></select></div><div><label>年</label><select id="filterYear"><option value="">すべて</option></select></div></div><label>表示</label><select id="filterStatus"><option value="">すべて</option><option value="ng">異常ありのみ</option><option value="ok">異常なしのみ</option></select></div><div id="records"></div></div>
-<div id="backup" class="view hidden"><div class="card"><h2>PCへ取り込む</h2><div class="hint">CSVはExcelで開けます。JSONはバックアップ用です。</div><div class="row2" style="margin-top:10px"><button class="btn primary" id="csvBtn">PC取込用CSV</button><button class="btn primary" id="jsonBtn">バックアップ</button></div></div><div class="card"><h2>PCから取り込む</h2><input id="jsonIn" type="file" accept=".json,application/json"></div></div>
-<div id="settings" class="view hidden"><div class="card"><h2>設定</h2><label>使用者</label><input id="setUser" readonly><label>施設</label><select id="setFac"></select><button class="btn primary" id="changeFac" style="width:100%;margin-top:12px">この施設に切り替える</button><button class="btn" id="changeUser" style="width:100%;margin-top:8px">使用者名を変更</button></div></div>
-</section></main>
-<footer id="footer" class="hidden"><button class="btn" id="switch">施設切替</button><button class="btn primary" id="saveBottom">保存</button></footer>
+<div class="card hidden" id="facilityCard">
+<h2>施設登録</h2>
+<label for="facilityName">施設名</label><input id="facilityName" type="text" placeholder="例：ジンノウチ機場">
+<label for="facilityNo">施設番号（任意）</label><input id="facilityNo" type="text" placeholder="例：M-001">
+<button type="button" class="primary" id="registerFacilityButton">施設を登録</button>
+</div>
+<div class="card hidden" id="facilityListCard"><h2>登録済み施設</h2><div id="facilityList"></div></div>
+</section>
+
+<section id="app" class="hidden">
+<div class="tabs">
+<button class="tab active" data-page="entry">点検入力</button>
+<button class="tab" data-page="history">記録一覧</button>
+<button class="tab" data-page="settings">設定</button>
+</div>
+<div id="entryPage">
+<div class="card"><h2>点検記録</h2><label>点検日時</label><input id="inspectDate" type="datetime-local"><div class="kpis" style="margin-top:12px"><div class="kpi"><strong id="doneCount">0</strong><span>点検済み</span></div><div class="kpi"><strong id="ngCount">0</strong><span>異常あり</span></div><div class="kpi"><strong id="leftCount">37</strong><span>未入力</span></div></div></div>
+<div class="card"><h2>日常点検</h2><div id="checkList"></div></div>
+<div class="card"><h2>全体記録</h2><label>所見</label><textarea id="finding"></textarea><label>特記事項</label><textarea id="special"></textarea><button type="button" class="primary" id="saveRecordButton">この記録を保存</button></div>
+</div>
+<div id="historyPage" class="hidden"><div class="card"><h2>記録一覧</h2><div id="historyList"></div></div></div>
+<div id="settingsPage" class="hidden"><div class="card"><h2>設定</h2><label>使用者</label><input id="currentUser" readonly><label>施設</label><div id="currentFacility"></div><button type="button" class="secondary" id="switchFacilityButton" style="width:100%;margin-top:12px">施設を切り替える</button></div></div>
+</section>
+</main>
+<div id="appFooter" class="hidden"><button type="button" class="secondary" id="footerSwitch">施設切替</button><button type="button" class="primary" id="footerSave" style="margin-top:0">保存</button></div>
+
 <script>
-window.CHECKS=[
-["水利用・水理","水管理性能","揚水量の異常（低下等）"],["水利用・水理","水管理性能","吸水槽水位の異常上昇・異常低下"],["水利用・水理","その他","その他の異常"],
-["機場本体","建屋","コンクリートの崩壊・欠損・剥落・ひび割れ"],["機場本体","建屋","不同沈下"],["機場本体","建屋","鉄筋露出"],["機場本体","建屋","漏水（防水性の低下）"],["機場本体","建屋","その他の異常"],
-["機場本体","吸水槽・吐水槽","ゴミ等の堆積"],["機場本体","吸水槽・吐水槽","コンクリートの崩壊・欠損・剥落・ひび割れ"],["機場本体","吸水槽・吐水槽","不同沈下"],["機場本体","吸水槽・吐水槽","鉄筋露出"],["機場本体","吸水槽・吐水槽","漏水"],["機場本体","吸水槽・吐水槽","その他の異常"],
-["機場本体","樋門・樋管","抜け上がり・不同沈下・陥没"],["機場本体","樋門・樋管","コンクリートの欠損・剥落・ひび割れ"],["機場本体","樋門・樋管","その他の異常"],
-["機場本体","沈砂池・遊水池","周辺地盤の異常"],["機場本体","沈砂池・遊水池","その他の異常"],
-["ポンプ設備","本体","外観の変状（錆、割れ、ボルトナットの緩み等）"],["ポンプ設備","本体","異常な振動・音・過熱・異臭"],["ポンプ設備","本体","油・グリースの漏れ"],["ポンプ設備","本体","その他の異常"],
-["ゲート設備","扉体・扉体可動部・戸当り","清掃状態の不良（ごみ、流木、土砂の堆積等）"],["ゲート設備","扉体・扉体可動部・戸当り","外観の異常（塗膜損傷、劣化、発錆、損傷、変形）"],["ゲート設備","扉体・扉体可動部・戸当り","異常な振動・音"],["ゲート設備","扉体・扉体可動部・戸当り","漏水"],["ゲート設備","扉体・扉体可動部・戸当り","その他の異常"],
-["除塵設備","スクリーン","清掃状態の不良（ごみ、流木、土砂の堆積等）"],["除塵設備","スクリーン","外観の異常（劣化・発錆・磨耗・損傷・変形・ボルトナットの緩み等）"],["除塵設備","スクリーン","異常な振動・音"],["除塵設備","スクリーン","その他の異常"],
-["電気設備","本体","外観の異常（盤面及び盤内機器変色等）"],["電気設備","本体","計器類が正常に作動しない"],["電気設備","本体","異常な音・過熱・異臭"],["電気設備","本体","その他の異常"],["その他","環境等","周辺住民からの苦情"]
+(function(){
+"use strict";
+var CHECKS=[
+"揚水量の異常（低下等）","吸水槽水位の異常上昇・異常低下","その他の異常",
+"コンクリートの崩壊・欠損・剥落・ひび割れ","不同沈下","鉄筋露出","漏水（防水性の低下）","その他の異常",
+"ゴミ等の堆積","コンクリートの崩壊・欠損・剥落・ひび割れ","不同沈下","鉄筋露出","漏水","その他の異常",
+"抜け上がり・不同沈下・陥没","コンクリートの欠損・剥落・ひび割れ","その他の異常",
+"周辺地盤の異常","その他の異常",
+"外観の変状（錆、割れ、ボルトナットの緩み等）","異常な振動・音・過熱・異臭","油・グリースの漏れ","その他の異常",
+"清掃状態の不良（ごみ、流木、土砂の堆積等）","外観の異常（塗膜損傷、劣化、発錆、損傷、変形）","異常な振動・音","漏水","その他の異常",
+"清掃状態の不良（ごみ、流木、土砂の堆積等）","外観の異常（劣化・発錆・磨耗・損傷・変形等）","異常な振動・音","その他の異常",
+"外観の異常（盤面及び盤内機器変色等）","計器類が正常に作動しない","異常な音・過熱・異臭","その他の異常",
+"周辺住民からの苦情"
 ];
-const $=id=>document.getElementById(id),U="fm_user",F="fm_fac",C="fm_cur",R="fm_rec";
-let s={user:null,facs:[],cur:null};function esc(x){return String(x==null?"":x).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
-function now(){let d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16)}
-function load(){try{s.user=JSON.parse(localStorage.getItem(U)||"null")}catch(e){}try{s.facs=JSON.parse(localStorage.getItem(F)||"[]")}catch(e){}try{s.cur=JSON.parse(localStorage.getItem(C)||"null")}catch(e){}s.facs=Array.isArray(s.facs)?s.facs:[]}
-function save(){localStorage.setItem(U,JSON.stringify(s.user));localStorage.setItem(F,JSON.stringify(s.facs));localStorage.setItem(C,JSON.stringify(s.cur))}
-function userUI(){if(!s.user)return;$("headUser").textContent=s.user.role?s.user.name+"（"+s.user.role+"）":s.user.name;$("setUser").value=s.user.name;$("userCard").classList.add("hidden");$("facCard").classList.remove("hidden");$("facListCard").classList.remove("hidden");renderFac()}
-function renderFac(){$("facList").innerHTML=s.facs.length?s.facs.map(f=>'<div class="record"><div class="record-head"><div><b>'+esc(f.name)+'</b><div class="small">'+esc(f.no||"")+'</div></div><button class="btn" data-f="'+f.id+'">この施設で開始</button></div></div>').join(""):'<div class="hint">まだ登録されていません。</div>'}
-function registerUser(){var n=document.getElementById("userName").value.trim();if(!n){window.alert("名前を入力してください");return false;}s.user={name:n,role:document.getElementById("userRole").value.trim()};save();userUI();return false;}
-$("addFac").onclick=()=>{let n=$("facName").value.trim();if(!n)return alert("施設名を入力してください");let f={id:Date.now().toString(),name:n,no:$("facNo").value.trim()};s.facs.push(f);s.cur=f;save();activate(f);$("facName").value="";$("facNo").value=""}
-$("facList").onclick=e=>{let b=e.target.closest("[data-f]");if(!b)return;let f=s.facs.find(x=>x.id===b.dataset.f);if(f){s.cur=f;save();activate(f)}}
-function activate(f){s.cur=f;save();$("headFacility").textContent=f.name;$("setup").classList.add("hidden");$("app").classList.remove("hidden");$("footer").classList.remove("hidden");$("setFac").innerHTML=s.facs.map(x=>'<option value="'+x.id+'">'+esc(x.name)+'</option>').join("");$("setFac").value=f.id;newRecord()}
-function build(){let root=$("checks"),last="";CHECKS.forEach((x,i)=>{if(x[0]!==last){root.insertAdjacentHTML("beforeend",'<div class="section">'+esc(x[0])+'</div>');last=x[0]}root.insertAdjacentHTML("beforeend",'<div class="item" data-i="'+i+'"><div class="item-title">'+esc(x[2])+'</div><div class="choice"><button class="btn ok" data-v="ok">異常なし</button><button class="btn ngb" data-v="ng">異常あり</button><button class="btn nab" data-v="na">対象外</button></div><div class="extra"><label>位置・状況</label><input class="loc"><label>コメント</label><textarea class="cm"></textarea></div></div>')})$("points").innerHTML=[1,2,3].map(n=>'<div class="item" data-p="'+n+'"><b>定点 '+n+'</b><label>健全度</label><select class="health"><option value="">未入力</option><option>S-5</option><option>S-4</option><option>S-3</option><option>S-2</option><option>S-1</option></select><button class="btn gps" style="width:100%;margin-top:8px">📍 現在位置を取得</button><div class="row2"><div><label>緯度</label><input class="lat"></div><div><label>経度</label><input class="lng"></div></div><label>写真</label><input type="file" accept="image/*" capture="environment"><label>コメント</label><textarea class="pc"></textarea><label>所見</label><textarea class="pf"></textarea></div>').join("");
-$("checks").addEventListener("click",e=>{let b=e.target.closest(".choice .btn");if(!b)return;let it=b.closest(".item");it.querySelectorAll(".choice .btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");it.classList.toggle("ng",b.dataset.v==="ng");stats()});
-$("points").addEventListener("click",e=>{let b=e.target.closest(".gps");if(!b)return;if(!navigator.geolocation)return alert("位置情報を取得できません");navigator.geolocation.getCurrentPosition(p=>{let it=b.parentElement;it.querySelector(".lat").value=p.coords.latitude.toFixed(6);it.querySelector(".lng").value=p.coords.longitude.toFixed(6);b.textContent="✅ 取得済み"},()=>alert("位置情報を取得できませんでした"));});$("points").addEventListener("change",stats)}
-function stats(){let c=[...document.querySelectorAll("[data-i] .active")],ng=c.filter(x=>x.dataset.v==="ng").length;$("done").textContent=c.length;$("ngCount").textContent=ng;$("left").textContent=CHECKS.length-c.length;$("pdone").textContent=[...document.querySelectorAll(".health")].filter(x=>x.value).length}
-function form(){let checks=[...document.querySelectorAll("[data-i]")].map(it=>{let i=+it.dataset.i,a=it.querySelector(".active");return{group:CHECKS[i][0],subgroup:CHECKS[i][1],item:CHECKS[i][2],status:(a ? a.dataset.v : "")||"",location:it.querySelector(".loc").value,comment:it.querySelector(".cm").value}}),points=[...document.querySelectorAll("[data-p]")].map(it=>({no:+it.dataset.p,health:it.querySelector(".health").value,lat:it.querySelector(".lat").value,lng:it.querySelector(".lng").value,comment:it.querySelector(".pc").value,finding:it.querySelector(".pf").value}));return{id:(crypto.randomUUID?crypto.randomUUID():String(Date.now())),facilityId:s.cur.id,facility:s.cur.name,user:s.user.name,inspectAt:$("inspectAt").value,prevAt:$("prevAt").value,importance:$("importance").value,facilityInfo:$("facilityInfo").value,address:$("address").value,finding:$("finding").value,special:$("special").value,checks,points,ng:checks.filter(x=>x.status==="ng").length,done:checks.filter(x=>x.status).length,savedAt:new Date().toISOString()}}
-function recs(){try{return JSON.parse(localStorage.getItem(R)||"[]")}catch(e){return[]}}function put(a){localStorage.setItem(R,JSON.stringify(a))}
-function newRecord(){document.querySelectorAll(".choice .btn").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".item").forEach(x=>x.classList.remove("ng"));document.querySelectorAll("input,textarea").forEach(x=>{if(!["userName","userRole","facName","facNo"].includes(x.id))x.value=""});document.querySelectorAll(".health").forEach(x=>x.value="");$("inspectAt").value=now();$("importance").value="S-5";stats()}
-$("saveRecord").onclick=()=>{if(!s.cur)return alert("施設を選択してください");let r=form();if(!r.inspectAt)return alert("点検日時を入力してください");let a=recs();a.unshift(r);put(a);alert("記録を保存しました");newRecord();renderHist()}
-$("saveBottom").onclick=()=>$("saveRecord").click();
-function renderFilters(){let fs=$("filterFac");fs.innerHTML='<option value="">すべて</option>'+s.facs.map(f=>'<option>'+esc(f.name)+'</option>').join("");let ys=[...new Set(recs().map(r=>(r.inspectAt||"").slice(0,4)).filter(Boolean))].sort().reverse();$("filterYear").innerHTML='<option value="">すべて</option>'+ys.map(y=>'<option>'+y+'</option>').join("")}
-function renderHist(){let a=recs(),ff=$("filterFac").value,fy=$("filterYear").value,fs=$("filterStatus").value;a=a.filter(r=>(!ff||r.facility===ff)&&(!fy||r.inspectAt.slice(0,4)===fy)&&(!fs||(fs==="ng"?r.ng>0:r.ng===0)));$("records").innerHTML=a.length?a.map(r=>'<div class="record"><div class="record-head"><div><b>'+esc(r.facility)+'</b><div class="small">'+esc((r.inspectAt||"").replace("T"," "))+'｜'+esc(r.user)+'</div></div><span class="badge '+(r.ng?"ng":"")+'">'+(r.ng?"異常 "+r.ng+"件":"異常なし")+'</span></div><div class="small" style="margin-top:6px">'+esc(r.finding||"所見なし")+'</div><button class="btn" data-del="'+r.id+'" style="margin-top:8px">削除</button></div>').join(""):'<div class="card hint">記録がありません。</div>';$("records").querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{if(confirm("削除しますか？")){put(recs().filter(r=>r.id!==b.dataset.del));renderHist()}})}
-["filterFac","filterYear","filterStatus"].forEach(id=>$(id).onchange=renderHist)
-document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{document.querySelectorAll(".view").forEach(v=>v.classList.add("hidden"));$(t.dataset.v).classList.remove("hidden");document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===t));if(t.dataset.v==="history"){renderFilters();renderHist()}if(t.dataset.v==="settings"){$("setUser").value=s.user.name;$("setFac").value=s.cur.id}})
-$("setFac").onchange=()=>{let f=s.facs.find(x=>x.id===$("setFac").value);if(f){s.cur=f;save();$("headFacility").textContent=f.name}}
-$("changeFac").onclick=()=>{let f=s.facs.find(x=>x.id===$("setFac").value);if(f){s.cur=f;save();$("headFacility").textContent=f.name;alert("切り替えました")}}
-$("changeUser").onclick=()=>{let n=prompt("使用者名",s.user.name);if(n&&n.trim()){s.user.name=n.trim();save();userUI();$("headUser").textContent=s.user.name}}
-$("switch").onclick=()=>{s.cur=null;save();$("setup").classList.remove("hidden");$("app").classList.add("hidden");$("footer").classList.add("hidden");userUI()}
-function escCsv(v){return '"'+String(v==null?"":v).split('"').join('""')+'"'}
-$("csvBtn").onclick=()=>{let a=recs(),h=["record_id","facility","user","inspect_at","prev_at","importance","ng","done","finding","special"];CHECKS.forEach((_,i)=>h.push("c"+String(i+1).padStart(2,"0")+"_status","c"+String(i+1).padStart(2,"0")+"_location","c"+String(i+1).padStart(2,"0")+"_comment"));for(let i=1;i<=3;i++)h.push("p"+i+"_health","p"+i+"_lat","p"+i+"_lng","p"+i+"_comment","p"+i+"_finding");let rows=[h];a.forEach(r=>{let v=[r.id,r.facility,r.user,r.inspectAt,r.prevAt,r.importance,r.ng,r.done,r.finding,r.special];r.checks.forEach(c=>v.push(c.status,c.location,c.comment));r.points.forEach(p=>v.push(p.health,p.lat,p.lng,p.comment,p.finding));rows.push(v)});let csv="﻿"+rows.map(r=>r.map(escCsv).join(",")).join("\r\n");dl("施設監視_PC取込.csv",csv,"text/csv;charset=utf-8")}
-$("jsonBtn").onclick=()=>dl("施設監視バックアップ.json",JSON.stringify({version:1,user:s.user,facilities:s.facs,current:s.cur,records:recs()},null,2),"application/json")
-$("jsonIn").onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let p=JSON.parse(await f.text());if(p.user)s.user=p.user;if(Array.isArray(p.facilities))s.facs=p.facilities;if(p.current)s.cur=p.current;let m=new Map(recs().map(r=>[r.id,r]));(p.records||[]).forEach(r=>m.set(r.id,r));put([...m.values()]);save();userUI();if(s.cur)activate(s.cur);alert((p.records||[]).length+"件取り込みました")}catch(_){alert("読み込みできませんでした")}};
-function dl(name,data,type){let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-function boot(){load();if(s.user){userUI();if(s.cur)activate(s.cur)}$("inspectAt").value=now()}
-build();boot();if(false)navigator.serviceWorker.register("./sw.js?v=9");
-$("addFac").onclick=()=>{let n=$("facName").value.trim();if(!n)return alert("施設名を入力してください");let f={id:Date.now().toString(),name:n,no:$("facNo").value.trim()};s.facs.push(f);s.cur=f;save();activate(f);$("facName").value="";$("facNo").value=""}
-$("facList").onclick=e=>{let b=e.target.closest("[data-f]");if(!b)return;let f=s.facs.find(x=>x.id===b.dataset.f);if(f){s.cur=f;save();activate(f)}}
-function activate(f){s.cur=f;save();$("headFacility").textContent=f.name;$("setup").classList.add("hidden");$("app").classList.remove("hidden");$("footer").classList.remove("hidden");$("setFac").innerHTML=s.facs.map(x=>'<option value="'+x.id+'">'+esc(x.name)+'</option>').join("");$("setFac").value=f.id;newRecord()}
-function build(){let root=$("checks"),last="";CHECKS.forEach((x,i)=>{if(x[0]!==last){root.insertAdjacentHTML("beforeend",'<div class="section">'+esc(x[0])+'</div>');last=x[0]}root.insertAdjacentHTML("beforeend",'<div class="item" data-i="'+i+'"><div class="item-title">'+esc(x[2])+'</div><div class="choice"><button class="btn ok" data-v="ok">異常なし</button><button class="btn ngb" data-v="ng">異常あり</button><button class="btn nab" data-v="na">対象外</button></div><div class="extra"><label>位置・状況</label><input class="loc"><label>コメント</label><textarea class="cm"></textarea></div></div>')})$("points").innerHTML=[1,2,3].map(n=>'<div class="item" data-p="'+n+'"><b>定点 '+n+'</b><label>健全度</label><select class="health"><option value="">未入力</option><option>S-5</option><option>S-4</option><option>S-3</option><option>S-2</option><option>S-1</option></select><button class="btn gps" style="width:100%;margin-top:8px">📍 現在位置を取得</button><div class="row2"><div><label>緯度</label><input class="lat"></div><div><label>経度</label><input class="lng"></div></div><label>写真</label><input type="file" accept="image/*" capture="environment"><label>コメント</label><textarea class="pc"></textarea><label>所見</label><textarea class="pf"></textarea></div>').join("");
-$("checks").addEventListener("click",e=>{let b=e.target.closest(".choice .btn");if(!b)return;let it=b.closest(".item");it.querySelectorAll(".choice .btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");it.classList.toggle("ng",b.dataset.v==="ng");stats()});
-$("points").addEventListener("click",e=>{let b=e.target.closest(".gps");if(!b)return;if(!navigator.geolocation)return alert("位置情報を取得できません");navigator.geolocation.getCurrentPosition(p=>{let it=b.parentElement;it.querySelector(".lat").value=p.coords.latitude.toFixed(6);it.querySelector(".lng").value=p.coords.longitude.toFixed(6);b.textContent="✅ 取得済み"},()=>alert("位置情報を取得できませんでした"));});$("points").addEventListener("change",stats)}
-function stats(){let c=[...document.querySelectorAll("[data-i] .active")],ng=c.filter(x=>x.dataset.v==="ng").length;$("done").textContent=c.length;$("ngCount").textContent=ng;$("left").textContent=CHECKS.length-c.length;$("pdone").textContent=[...document.querySelectorAll(".health")].filter(x=>x.value).length}
-function form(){let checks=[...document.querySelectorAll("[data-i]")].map(it=>{let i=+it.dataset.i,a=it.querySelector(".active");return{group:CHECKS[i][0],subgroup:CHECKS[i][1],item:CHECKS[i][2],status:(a ? a.dataset.v : "")||"",location:it.querySelector(".loc").value,comment:it.querySelector(".cm").value}}),points=[...document.querySelectorAll("[data-p]")].map(it=>({no:+it.dataset.p,health:it.querySelector(".health").value,lat:it.querySelector(".lat").value,lng:it.querySelector(".lng").value,comment:it.querySelector(".pc").value,finding:it.querySelector(".pf").value}));return{id:(crypto.randomUUID?crypto.randomUUID():String(Date.now())),facilityId:s.cur.id,facility:s.cur.name,user:s.user.name,inspectAt:$("inspectAt").value,prevAt:$("prevAt").value,importance:$("importance").value,facilityInfo:$("facilityInfo").value,address:$("address").value,finding:$("finding").value,special:$("special").value,checks,points,ng:checks.filter(x=>x.status==="ng").length,done:checks.filter(x=>x.status).length,savedAt:new Date().toISOString()}}
-function recs(){try{return JSON.parse(localStorage.getItem(R)||"[]")}catch(e){return[]}}function put(a){localStorage.setItem(R,JSON.stringify(a))}
-function newRecord(){document.querySelectorAll(".choice .btn").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".item").forEach(x=>x.classList.remove("ng"));document.querySelectorAll("input,textarea").forEach(x=>{if(!["userName","userRole","facName","facNo"].includes(x.id))x.value=""});document.querySelectorAll(".health").forEach(x=>x.value="");$("inspectAt").value=now();$("importance").value="S-5";stats()}
-$("saveRecord").onclick=()=>{if(!s.cur)return alert("施設を選択してください");let r=form();if(!r.inspectAt)return alert("点検日時を入力してください");let a=recs();a.unshift(r);put(a);alert("記録を保存しました");newRecord();renderHist()}
-$("saveBottom").onclick=()=>$("saveRecord").click();
-function renderFilters(){let fs=$("filterFac");fs.innerHTML='<option value="">すべて</option>'+s.facs.map(f=>'<option>'+esc(f.name)+'</option>').join("");let ys=[...new Set(recs().map(r=>(r.inspectAt||"").slice(0,4)).filter(Boolean))].sort().reverse();$("filterYear").innerHTML='<option value="">すべて</option>'+ys.map(y=>'<option>'+y+'</option>').join("")}
-function renderHist(){let a=recs(),ff=$("filterFac").value,fy=$("filterYear").value,fs=$("filterStatus").value;a=a.filter(r=>(!ff||r.facility===ff)&&(!fy||r.inspectAt.slice(0,4)===fy)&&(!fs||(fs==="ng"?r.ng>0:r.ng===0)));$("records").innerHTML=a.length?a.map(r=>'<div class="record"><div class="record-head"><div><b>'+esc(r.facility)+'</b><div class="small">'+esc((r.inspectAt||"").replace("T"," "))+'｜'+esc(r.user)+'</div></div><span class="badge '+(r.ng?"ng":"")+'">'+(r.ng?"異常 "+r.ng+"件":"異常なし")+'</span></div><div class="small" style="margin-top:6px">'+esc(r.finding||"所見なし")+'</div><button class="btn" data-del="'+r.id+'" style="margin-top:8px">削除</button></div>').join(""):'<div class="card hint">記録がありません。</div>';$("records").querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{if(confirm("削除しますか？")){put(recs().filter(r=>r.id!==b.dataset.del));renderHist()}})}
-["filterFac","filterYear","filterStatus"].forEach(id=>$(id).onchange=renderHist)
-document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{document.querySelectorAll(".view").forEach(v=>v.classList.add("hidden"));$(t.dataset.v).classList.remove("hidden");document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===t));if(t.dataset.v==="history"){renderFilters();renderHist()}if(t.dataset.v==="settings"){$("setUser").value=s.user.name;$("setFac").value=s.cur.id}})
-$("setFac").onchange=()=>{let f=s.facs.find(x=>x.id===$("setFac").value);if(f){s.cur=f;save();$("headFacility").textContent=f.name}}
-$("changeFac").onclick=()=>{let f=s.facs.find(x=>x.id===$("setFac").value);if(f){s.cur=f;save();$("headFacility").textContent=f.name;alert("切り替えました")}}
-$("changeUser").onclick=()=>{let n=prompt("使用者名",s.user.name);if(n&&n.trim()){s.user.name=n.trim();save();userUI();$("headUser").textContent=s.user.name}}
-$("switch").onclick=()=>{s.cur=null;save();$("setup").classList.remove("hidden");$("app").classList.add("hidden");$("footer").classList.add("hidden");userUI()}
-function escCsv(v){return '"'+String(v==null?"":v).split('"').join('""')+'"'}
-$("csvBtn").onclick=()=>{let a=recs(),h=["record_id","facility","user","inspect_at","prev_at","importance","ng","done","finding","special"];CHECKS.forEach((_,i)=>h.push("c"+String(i+1).padStart(2,"0")+"_status","c"+String(i+1).padStart(2,"0")+"_location","c"+String(i+1).padStart(2,"0")+"_comment"));for(let i=1;i<=3;i++)h.push("p"+i+"_health","p"+i+"_lat","p"+i+"_lng","p"+i+"_comment","p"+i+"_finding");let rows=[h];a.forEach(r=>{let v=[r.id,r.facility,r.user,r.inspectAt,r.prevAt,r.importance,r.ng,r.done,r.finding,r.special];r.checks.forEach(c=>v.push(c.status,c.location,c.comment));r.points.forEach(p=>v.push(p.health,p.lat,p.lng,p.comment,p.finding));rows.push(v)});let csv="﻿"+rows.map(r=>r.map(escCsv).join(",")).join("\r\n");dl("施設監視_PC取込.csv",csv,"text/csv;charset=utf-8")}
-$("jsonBtn").onclick=()=>dl("施設監視バックアップ.json",JSON.stringify({version:1,user:s.user,facilities:s.facs,current:s.cur,records:recs()},null,2),"application/json")
-$("jsonIn").onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let p=JSON.parse(await f.text());if(p.user)s.user=p.user;if(Array.isArray(p.facilities))s.facs=p.facilities;if(p.current)s.cur=p.current;let m=new Map(recs().map(r=>[r.id,r]));(p.records||[]).forEach(r=>m.set(r.id,r));put([...m.values()]);save();userUI();if(s.cur)activate(s.cur);alert((p.records||[]).length+"件取り込みました")}catch(_){alert("読み込みできませんでした")}};
-function dl(name,data,type){let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-function boot(){load();if(s.user){userUI();if(s.cur)activate(s.cur)}$("inspectAt").value=now()}
-build();boot();if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js?v=8").catch(function(){});
-</script></body></html>
+var USER_KEY="facility_user_v1",FAC_KEY="facility_list_v1",CURRENT_KEY="facility_current_v1",REC_KEY="facility_records_v1";
+var user=null,facilities=[],current=null;
+function $(id){return document.getElementById(id);}
+function read(key,fallback){try{var v=localStorage.getItem(key);return v?JSON.parse(v):fallback}catch(e){return fallback}}
+function write(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true}catch(e){alert("端末への保存が許可されていません。Safariの設定を確認してください。");return false}}
+function setDate(){var d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());$("inspectDate").value=d.toISOString().slice(0,16)}
+function renderFacilities(){var box=$("facilityList");box.innerHTML="";if(!facilities.length){box.textContent="まだ施設がありません。";return}facilities.forEach(function(f){var row=document.createElement("div");row.className="facility";var span=document.createElement("span");span.textContent=f.name+(f.no?"（"+f.no+"）":"");var b=document.createElement("button");b.type="button";b.className="secondary";b.textContent="開始";b.addEventListener("click",function(){startFacility(f)});row.appendChild(span);row.appendChild(b);box.appendChild(row)})}
+function showUser(){if(!user)return;$("userCard").classList.add("hidden");$("facilityCard").classList.remove("hidden");$("facilityListCard").classList.remove("hidden");$("headerUser").textContent=user.role?user.name+"（"+user.role+"）":user.name;$("currentUser").value=user.name;renderFacilities()}
+function registerUser(){var name=$("userName").value.trim();if(name===""){window.alert("名前を入力してください。");return}user={name:name,role:$("userRole").value.trim()};if(!write(USER_KEY,user))return;showUser()}
+function registerFacility(){var name=$("facilityName").value.trim();if(name===""){window.alert("施設名を入力してください。");return}var f={id:String(Date.now()),name:name,no:$("facilityNo").value.trim()};facilities.push(f);write(FAC_KEY,facilities);startFacility(f)}
+function startFacility(f){current=f;write(CURRENT_KEY,f);$("headerFacility").textContent=f.name;$("setup").classList.add("hidden");$("app").classList.remove("hidden");$("appFooter").classList.remove("hidden");renderCurrentFacility();newRecord()}
+function renderCurrentFacility(){$("currentFacility").textContent=current?current.name:"施設未選択"}
+function buildChecks(){var box=$("checkList");box.innerHTML="";CHECKS.forEach(function(name,i){var item=document.createElement("div");item.className="item";item.dataset.index=i;var title=document.createElement("b");title.textContent=name;item.appendChild(title);var choices=document.createElement("div");choices.className="choices";[["ok","異常なし"],["ng","異常あり"],["na","対象外"]].forEach(function(pair){var b=document.createElement("button");b.type="button";b.dataset.value=pair[0];b.textContent=pair[1];b.addEventListener("click",function(){item.querySelectorAll("button").forEach(function(x){x.classList.remove("selected")});b.classList.add("selected");item.classList.toggle("is-ng",pair[0]==="ng");updateStats()});choices.appendChild(b)});item.appendChild(choices);var detail=document.createElement("div");detail.className="detail";detail.innerHTML="<label>位置・状況</label><input class='location'><label>コメント</label><textarea class='comment'></textarea>";item.appendChild(detail);box.appendChild(item)})}
+function updateStats(){var items=document.querySelectorAll("#checkList .item"),done=0,ng=0;items.forEach(function(item){var b=item.querySelector(".selected");if(b){done++;if(b.dataset.value==="ng")ng++}});$("doneCount").textContent=done;$("ngCount").textContent=ng;$("leftCount").textContent=CHECKS.length-done}
+function newRecord(){$("finding").value="";$("special").value="";document.querySelectorAll("#checkList .selected").forEach(function(b){b.classList.remove("selected")});document.querySelectorAll("#checkList .is-ng").forEach(function(x){x.classList.remove("is-ng")});document.querySelectorAll("#checkList input,#checkList textarea").forEach(function(x){x.value=""});setDate();updateStats()}
+function collectRecord(){var checks=[];document.querySelectorAll("#checkList .item").forEach(function(item){var i=Number(item.dataset.index),b=item.querySelector(".selected");checks.push({item:CHECKS[i],status:b?b.dataset.value:"",location:item.querySelector(".location").value,comment:item.querySelector(".comment").value})});return{id:String(Date.now())+"_"+Math.random(),facility:current.name,user:user.name,inspectDate:$("inspectDate").value,finding:$("finding").value,special:$("special").value,checks:checks,savedAt:new Date().toISOString()}}
+function saveRecord(){if(!current){window.alert("先に施設を選択してください。");return}var records=read(REC_KEY,[]);records.unshift(collectRecord());if(write(REC_KEY,records)){window.alert("記録を保存しました。");newRecord();showHistory()}}
+function showHistory(){var records=read(REC_KEY,[]),box=$("historyList");box.innerHTML="";if(!records.length){box.textContent="記録がありません。";return}records.forEach(function(r){var div=document.createElement("div");div.className="card";var ng=r.checks.filter(function(c){return c.status==="ng"}).length;div.innerHTML="<b>"+escapeHtml(r.facility)+"</b><div class='sub'>"+escapeHtml(r.inspectDate)+"｜"+escapeHtml(r.user)+"</div><div style='margin-top:7px'>"+(ng?"異常 "+ng+"件":"異常なし")+"</div>";box.appendChild(div)})}
+function escapeHtml(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function setupTabs(){document.querySelectorAll(".tab").forEach(function(tab){tab.addEventListener("click",function(){document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("active")});tab.classList.add("active");$("entryPage").classList.add("hidden");$("historyPage").classList.add("hidden");$("settingsPage").classList.add("hidden");if(tab.dataset.page==="entry")$("entryPage").classList.remove("hidden");if(tab.dataset.page==="history"){showHistory();$("historyPage").classList.remove("hidden")}if(tab.dataset.page==="settings")$("settingsPage").classList.remove("hidden")})})}
+function switchFacility(){$("setup").classList.remove("hidden");$("app").classList.add("hidden");$("appFooter").classList.add("hidden");showUser()}
+function boot(){user=read(USER_KEY,null);facilities=read(FAC_KEY,[]);current=read(CURRENT_KEY,null);$("registerUserButton").addEventListener("click",registerUser);$("registerFacilityButton").addEventListener("click",registerFacility);$("saveRecordButton").addEventListener("click",saveRecord);$("footerSave").addEventListener("click",saveRecord);$("footerSwitch").addEventListener("click",switchFacility);$("switchFacilityButton").addEventListener("click",switchFacility);setupTabs();buildChecks();if(user){showUser();if(current)startFacility(current)}else{$("facilityCard").classList.add("hidden");$("facilityListCard").classList.add("hidden")}setDate()}
+if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",boot)}else{boot()}
+})();
+</script>
+</body>
+</html>
