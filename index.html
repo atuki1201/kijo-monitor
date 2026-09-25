@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1f5f4a">
-<title>施設監視 v13</title>
+<title>施設監視 v14</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f4f7f5;color:#1d2722;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif}
 header{background:#1f5f4a;color:white;padding:18px 16px}h1{font-size:20px;margin:0 0 5px}.sub{font-size:13px}
@@ -120,8 +120,13 @@ CATEGORIES.forEach(function(cat,ci){
         var currentValue=item.getAttribute("data-status") || "";
         var nextValue=(currentValue===pair[0]) ? "" : pair[0];
 
+        item.querySelectorAll(".choices button").forEach(function(x){
+          x.classList.remove("selected","ok","ng","na");
+        });
+
         if(nextValue){
           item.setAttribute("data-status",nextValue);
+          btn.classList.add("selected",nextValue);
         }else{
           item.removeAttribute("data-status");
         }
@@ -147,7 +152,10 @@ CATEGORIES.forEach(function(cat,ci){
 });
 }function updateStats(){
 var items=document.querySelectorAll("#checkList .item"),done=0,ng=0;
-items.forEach(function(item){var b=item.querySelector(".selected");if(b){done++;if(b.dataset.value==="ng")ng++}});
+items.forEach(function(item){
+  var status=item.getAttribute("data-status") || "";
+  if(status){done++;if(status==="ng")ng++}
+});
 $("doneCount").textContent=done;$("ngCount").textContent=ng;$("leftCount").textContent=CHECKS.length-done;
 CATEGORIES.forEach(function(cat,ci){
   var count=0,sectionItems=document.querySelectorAll("#checkList .item");
@@ -175,9 +183,9 @@ setDate();updateStats()}
 function collectRecord(){
 var checks=[];
 document.querySelectorAll("#checkList .item").forEach(function(item){
-  var i=Number(item.dataset.index),b=item.querySelector(".selected");
+  var i=Number(item.dataset.index),status=item.getAttribute("data-status") || "";
   var category=CATEGORIES.find(function(cat){return i>=cat.start&&i<=cat.end});
-  checks.push({index:i,category:category?category.name:"",item:CHECKS[i],status:b?b.dataset.value:"",location:item.querySelector(".location").value,comment:item.querySelector(".comment").value});
+  checks.push({index:i,category:category?category.name:"",item:CHECKS[i],status:status,location:item.querySelector(".location").value,comment:item.querySelector(".comment").value});
 });
 return{id:String(Date.now())+"_"+Math.random(),facility:current.name,user:user.name,inspectDate:$("inspectDate").value,finding:$("finding").value,special:$("special").value,checks:checks,savedAt:new Date().toISOString()}
 }function saveRecord(){if(!current){window.alert("先に施設を選択してください。");return}var records=read(REC_KEY,[]);records.unshift(collectRecord());if(write(REC_KEY,records)){window.alert("記録を保存しました。");newRecord();showHistory()}}
