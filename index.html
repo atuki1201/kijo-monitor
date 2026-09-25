@@ -113,7 +113,15 @@ CATEGORIES.forEach(function(cat,ci){
     [["ok","異常なし"],["ng","異常あり"],["na","対象外"]].forEach(function(pair){
       var btn=document.createElement("button");btn.type="button";btn.dataset.value=pair[0];btn.textContent=pair[1];
       btn.addEventListener("click",function(){
-        var alreadySelected=btn.classList.contains("selected");
+        var currentValue=item.getAttribute("data-status") || "";
+        var nextValue=(currentValue===pair[0]) ? "" : pair[0];
+
+        item.setAttribute("data-status",nextValue);
+
+        item.classList.remove("state-ok","state-ng","state-na","is-ng");
+        item.style.borderColor="";
+        item.style.backgroundColor="";
+
         item.querySelectorAll(".choices button").forEach(function(x){
           x.classList.remove("selected","ok","ng","na");
           x.style.backgroundColor="";
@@ -121,23 +129,22 @@ CATEGORIES.forEach(function(cat,ci){
           x.style.borderColor="";
           x.style.boxShadow="";
         });
-        item.classList.remove("state-ok","state-ng","state-na","is-ng");
-        item.style.borderColor="";
-        item.style.backgroundColor="";
-        if(alreadySelected){
+
+        if(nextValue===""){
           updateStats();
           return;
         }
-        btn.classList.add("selected",pair[0]);
-        item.classList.add("state-"+pair[0]);
-        if(pair[0]==="ok"){
-          btn.style.backgroundColor="#2e9f5b";btn.style.color="#fff";btn.style.borderColor="#2e9f5b";btn.style.boxShadow="0 0 0 2px rgba(46,159,91,.18)";
-        }else if(pair[0]==="ng"){
-          btn.style.backgroundColor="#d83a3a";btn.style.color="#fff";btn.style.borderColor="#d83a3a";btn.style.boxShadow="0 0 0 2px rgba(216,58,58,.18)";
-        }else{
-          btn.style.backgroundColor="#68756f";btn.style.color="#fff";btn.style.borderColor="#68756f";btn.style.boxShadow="0 0 0 2px rgba(104,117,111,.18)";
-        }
-        item.classList.toggle("is-ng",pair[0]==="ng");
+
+        btn.classList.add("selected",nextValue);
+        item.classList.add("state-"+nextValue);
+        if(nextValue==="ng") item.classList.add("is-ng");
+
+        var bg = nextValue==="ok" ? "#2e9f5b" : nextValue==="ng" ? "#d83a3a" : "#68756f";
+        btn.style.setProperty("background-color",bg,"important");
+        btn.style.setProperty("color","#fff","important");
+        btn.style.setProperty("border-color",bg,"important");
+        btn.style.setProperty("box-shadow","0 0 0 2px rgba(31,95,74,.18)","important");
+
         updateStats();
       });
       choices.appendChild(btn);
@@ -162,7 +169,7 @@ CATEGORIES.forEach(function(cat,ci){
   var el=$("sectionCount"+ci);if(el)el.textContent=count+"/"+(cat.end-cat.start+1)+"済";
 });
 }function newRecord(){$("finding").value="";$("special").value="";document.querySelectorAll("#checkList .selected").forEach(function(b){b.classList.remove("selected")});document.querySelectorAll("#checkList .is-ng").forEach(function(x){x.classList.remove("is-ng")});
-document.querySelectorAll("#checkList .item").forEach(function(x){x.classList.remove("state-ok","state-ng","state-na")});document.querySelectorAll("#checkList input,#checkList textarea").forEach(function(x){x.value=""});setDate();updateStats()}
+document.querySelectorAll("#checkList .item").forEach(function(x){x.classList.remove("state-ok","state-ng","state-na","is-ng");x.removeAttribute("data-status");x.style.borderColor="";x.style.backgroundColor=""});document.querySelectorAll("#checkList input,#checkList textarea").forEach(function(x){x.value=""});setDate();updateStats()}
 function collectRecord(){
 var checks=[];
 document.querySelectorAll("#checkList .item").forEach(function(item){
