@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1f5f4a">
-<title>施設監視 v18 テスト</title>
+<title>施設監視</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f4f7f5;color:#1d2722;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif}
 header{background:#1f5f4a;color:white;padding:18px 16px}h1{font-size:20px;margin:0 0 5px}.sub{font-size:13px}
 main{max-width:760px;margin:auto;padding:14px 12px 100px}.card{background:white;border:1px solid #d7e1db;border-radius:14px;padding:16px;margin-bottom:12px}h2{font-size:17px;margin:0 0 12px}
 label{display:block;font-size:13px;font-weight:bold;margin:12px 0 6px}input,select,textarea{width:100%;padding:13px;border:1px solid #cbd6d0;border-radius:10px;font-size:16px;background:white}textarea{min-height:80px}
-button{font:inherit;cursor:pointer}.primary{width:100%;margin-top:14px;padding:14px;border:0;border-radius:11px;background:#1f5f4a;color:white;font-weight:bold;font-size:16px}.secondary{padding:11px;border:1px solid #ccd6d1;background:white;border-radius:10px;font-weight:bold}
+button{font:inherit;cursor:pointer}.primary{width:100%;margin-top:14px;padding:14px;border:0;border-radius:11px;background:#1f5f4a;color:white;font-weight:bold;font-size:16px}.secondary{padding:11px;border:1px solid #ccd6d1;background:white;border-radius:10px;font-weight:bold}.danger{padding:11px;border:1px solid #d62828;background:white;color:#b21f1f;border-radius:10px;font-weight:bold}
 .hidden{display:none!important}.facility{display:flex;justify-content:space-between;align-items:center;border:1px solid #d7e1db;border-radius:11px;padding:12px;margin:8px 0}.facility button{margin-left:8px}
 .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}.tab{padding:11px 4px;border:1px solid #d7e1db;border-radius:10px;background:white;font-weight:bold;font-size:12px}.tab.active{background:#1f5f4a;color:white}
 .checkSection{border:1px solid #cfdcd5;border-radius:13px;margin:10px 0;overflow:hidden;background:#fff}.subSection{margin:7px 2px;border:1px solid #d8e1dc;border-radius:11px;overflow:hidden;background:#fff}.subHead{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 12px;border:0;background:#f7faf8;color:#40564b;font-weight:800;text-align:left;font-size:13px}.subHead .subCount{font-size:11px;font-weight:700;white-space:nowrap}.subHead .subChev{font-size:12px}.subBody{padding:2px 6px 6px}.sectionHead{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:13px 14px;border:0;background:#eef5f1;color:#1f5f4a;font-weight:800;text-align:left}.sectionHead .chev{font-size:15px}.sectionHead .sectionCount{font-size:11px;font-weight:700;white-space:nowrap}.sectionBody{padding:4px 9px 10px}.item{border:2px solid #d7e1db;border-radius:11px;padding:12px;margin:8px 0;background:#fff;transition:.15s}.item.state-ok{border-color:#1f9d55;background:#f3fbf6;box-shadow:inset 0 0 0 2px rgba(31,157,85,.10)}.item.state-ng{border-color:#d62828;background:#fff5f5;box-shadow:inset 0 0 0 2px rgba(214,40,40,.10)}.item.state-na{border-color:#5c6770;background:#f3f5f4;box-shadow:inset 0 0 0 2px rgba(92,103,112,.10)}.item b{font-size:13px;line-height:1.5}.choices{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}.choices button{padding:12px 3px;min-height:44px;border:2px solid #c7d2cc!important;background:#fff!important;color:#1d2722!important;border-radius:9px;font-weight:800;font-size:12px;transition:.12s;position:relative}.choices button.selected{font-weight:900!important;transform:scale(1.02)}.choices button.selected::before{content:"✓";display:inline-block;margin-right:4px;font-size:14px}.detail{display:none}.item.is-ng .detail{display:block}.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.kpi{background:#edf6f1;border-radius:10px;padding:9px;text-align:center}.kpi strong{display:block;font-size:20px;color:#1f5f4a}.kpi span{font-size:11px}.historyRow{border:1px solid #d7e1db;border-radius:12px;padding:13px;margin:8px 0;background:#fff}.historyRow button{width:100%;margin-top:10px}.statusPill{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800}.statusPill.ok{background:#eaf7ef;color:#277a48}.statusPill.ng{background:#fff0f0;color:#b12626}.historyDetail .detailHead{display:flex;justify-content:space-between;align-items:center;gap:8px}.historyDetail .backBtn{padding:9px 11px;border:1px solid #ccd6d1;background:#fff;border-radius:9px;font-weight:800}.detailSection{border:1px solid #d7e1db;border-radius:12px;margin:9px 0;overflow:hidden;background:#fff}.detailSection h3{margin:0;padding:11px 13px;background:#eef5f1;color:#1f5f4a;font-size:14px}.detailItem{padding:10px 13px;border-top:1px solid #edf0ee}.detailItem:first-child{border-top:0}.detailItem .name{font-size:12px;font-weight:700}.detailItem .result{margin-top:5px;font-size:12px}.detailItem .comment{margin-top:6px;color:#58635e;font-size:12px}
@@ -60,7 +60,7 @@ button{font:inherit;cursor:pointer}.primary{width:100%;margin-top:14px;padding:1
 </div>
 <div id="historyDetail" class="hidden historyDetail">
   <div class="card">
-    <div class="detailHead"><h2 style="margin:0">記録詳細</h2><button type="button" class="backBtn" id="historyBackButton">一覧に戻る</button></div>
+    <div class="detailHead"><h2 style="margin:0">記録詳細</h2><div style="display:flex;gap:7px"><button type="button" class="danger" id="detailDeleteButton">削除</button><button type="button" class="backBtn" id="historyBackButton" onclick="window.showHistory()">一覧に戻る</button></div></div>
     <div id="historyDetailBody" style="margin-top:12px"></div>
   </div>
 </div>
@@ -390,6 +390,24 @@ function exportJson(){
   var stamp=new Date().toISOString().slice(0,19).replace(/[:T]/g,"-");
   downloadFile("施設監視バックアップ_"+stamp+".json",JSON.stringify(payload,null,2),"application/json;charset=utf-8");
 }
+function deleteRecord(recordId){
+  var records=read(REC_KEY,[]);
+  var target=records.find(function(r){return r.id===recordId});
+  if(!target){window.alert("削除する記録が見つかりません。");return}
+  var ok=window.confirm(
+    "この点検記録を削除しますか？\n\n"+
+    "施設："+target.facility+"\n"+
+    "日時："+target.inspectDate+"\n"+
+    "使用者："+target.user+"\n\n"+
+    "※削除すると元に戻せません。"
+  );
+  if(!ok)return;
+  records=records.filter(function(r){return r.id!==recordId});
+  if(write(REC_KEY,records)){
+    showHistory();
+    window.alert("記録を削除しました。");
+  }
+}
 function showHistory(){
 $("historyListWrap").classList.remove("hidden");$("historyDetail").classList.add("hidden");
 var records=read(REC_KEY,[]),box=$("historyList");box.innerHTML="";
@@ -400,14 +418,20 @@ records.forEach(function(r){
   var un=r.checks.filter(function(c){return !c.status}).length;
   var statusHtml=ng?'<span class="statusPill ng">異常 '+ng+'件</span>':'<span class="statusPill ok">異常なし</span>';
   div.innerHTML="<b>"+escapeHtml(r.facility)+"</b><div class='sub' style='margin-top:4px'>"+escapeHtml(r.inspectDate)+" ｜ "+escapeHtml(r.user)+"</div><div style='margin-top:8px'>"+statusHtml+" <span style='font-size:11px;color:#6b756f;margin-left:6px'>未入力 "+un+"件</span></div>";
+  var actions=document.createElement("div");actions.style.display="grid";actions.style.gridTemplateColumns="1fr 1fr";actions.style.gap="7px";actions.style.marginTop="10px";
   var btn=document.createElement("button");btn.type="button";btn.className="secondary";btn.textContent="詳細を見る";btn.addEventListener("click",function(){showRecordDetail(r.id)});
-  div.appendChild(btn);box.appendChild(div);
+  var del=document.createElement("button");del.type="button";del.className="danger";del.textContent="削除";del.addEventListener("click",function(){deleteRecord(r.id)});
+  actions.appendChild(btn);actions.appendChild(del);
+  div.appendChild(actions);box.appendChild(div);
 });
 }
+window.showHistory=showHistory;
 function showRecordDetail(id){
 var records=read(REC_KEY,[]),r=records.find(function(x){return x.id===id});if(!r)return;
 $("historyListWrap").classList.add("hidden");$("historyDetail").classList.remove("hidden");
 var body=$("historyDetailBody");body.innerHTML="";
+var detailDeleteButton=$("detailDeleteButton");
+if(detailDeleteButton)detailDeleteButton.onclick=function(){deleteRecord(r.id)};
 var meta=document.createElement("div");meta.className="notice";meta.innerHTML="<b>"+escapeHtml(r.facility)+"</b><br>"+escapeHtml(r.inspectDate)+" ｜ "+escapeHtml(r.user);
 body.appendChild(meta);
 CATEGORIES.forEach(function(cat){
@@ -481,9 +505,13 @@ if("serviceWorker" in navigator){
 if("caches" in window){
   caches.keys().then(function(keys){keys.forEach(function(key){if(key.indexOf("kijo-")===0)caches.delete(key);});}).catch(function(){});
 }
+document.addEventListener("click",function(event){
+  var back=event.target.closest("#historyBackButton");
+  if(back){event.preventDefault();showHistory();}
+});
 function boot(){user=read(USER_KEY,null);facilities=read(FAC_KEY,[]);current=read(CURRENT_KEY,null);$("registerUserButton").addEventListener("click",registerUser);$("registerFacilityButton").addEventListener("click",registerFacility);$("saveRecordButton").addEventListener("click",saveRecord);
 $("exportCsvButton").addEventListener("click",exportCsv);
-$("exportJsonButton").addEventListener("click",exportJson);$("footerSave").addEventListener("click",saveRecord);$("footerSwitch").addEventListener("click",switchFacility);$("switchFacilityButton").addEventListener("click",switchFacility);setupTabs();buildChecks();runAll37SelfTest();$("historyBackButton").addEventListener("click",showHistory);if(user){showUser();if(current)startFacility(current)}else{$("facilityCard").classList.add("hidden");$("facilityListCard").classList.add("hidden")}setDate()}
+$("exportJsonButton").addEventListener("click",exportJson);$("footerSave").addEventListener("click",saveRecord);$("footerSwitch").addEventListener("click",switchFacility);$("switchFacilityButton").addEventListener("click",switchFacility);setupTabs();buildChecks();runAll37SelfTest();if($("historyBackButton"))$("historyBackButton").addEventListener("click",showHistory);if(user){showUser();if(current)startFacility(current)}else{$("facilityCard").classList.add("hidden");$("facilityListCard").classList.add("hidden")}setDate()}
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",boot)}else{boot()}
 })();
 </script>
