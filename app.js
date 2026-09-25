@@ -5,7 +5,7 @@ function load(){try{s.user=JSON.parse(localStorage.getItem(U)||"null")}catch(e){
 function save(){localStorage.setItem(U,JSON.stringify(s.user));localStorage.setItem(F,JSON.stringify(s.facs));localStorage.setItem(C,JSON.stringify(s.cur))}
 function userUI(){if(!s.user)return;$("headUser").textContent=s.user.role?s.user.name+"（"+s.user.role+"）":s.user.name;$("setUser").value=s.user.name;$("userCard").classList.add("hidden");$("facCard").classList.remove("hidden");$("facListCard").classList.remove("hidden");renderFac()}
 function renderFac(){$("facList").innerHTML=s.facs.length?s.facs.map(f=>'<div class="record"><div class="record-head"><div><b>'+esc(f.name)+'</b><div class="small">'+esc(f.no||"")+'</div></div><button class="btn" data-f="'+f.id+'">この施設で開始</button></div></div>').join(""):'<div class="hint">まだ登録されていません。</div>'}
-$("saveUser").onclick=()=>{let n=$("userName").value.trim();if(!n)return alert("名前を入力してください");s.user={name:n,role:$("userRole").value.trim()};save();userUI()}
+function registerUser(){let n=$("userName").value.trim();if(!n){alert("名前を入力してください");return} s.user={name:n,role:$("userRole").value.trim()};save();userUI()} $("saveUser").addEventListener("click",registerUser);
 $("addFac").onclick=()=>{let n=$("facName").value.trim();if(!n)return alert("施設名を入力してください");let f={id:Date.now().toString(),name:n,no:$("facNo").value.trim()};s.facs.push(f);s.cur=f;save();activate(f);$("facName").value="";$("facNo").value=""}
 $("facList").onclick=e=>{let b=e.target.closest("[data-f]");if(!b)return;let f=s.facs.find(x=>x.id===b.dataset.f);if(f){s.cur=f;save();activate(f)}}
 function activate(f){s.cur=f;save();$("headFacility").textContent=f.name;$("setup").classList.add("hidden");$("app").classList.remove("hidden");$("footer").classList.remove("hidden");$("setFac").innerHTML=s.facs.map(x=>'<option value="'+x.id+'">'+esc(x.name)+'</option>').join("");$("setFac").value=f.id;newRecord()}
@@ -32,4 +32,4 @@ $("jsonBtn").onclick=()=>dl("施設監視バックアップ.json",JSON.stringify
 $("jsonIn").onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let p=JSON.parse(await f.text());if(p.user)s.user=p.user;if(Array.isArray(p.facilities))s.facs=p.facilities;if(p.current)s.cur=p.current;let m=new Map(recs().map(r=>[r.id,r]));(p.records||[]).forEach(r=>m.set(r.id,r));put([...m.values()]);save();userUI();if(s.cur)activate(s.cur);alert((p.records||[]).length+"件取り込みました")}catch(_){alert("読み込みできませんでした")}};
 function dl(name,data,type){let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function boot(){load();if(s.user){userUI();if(s.cur)activate(s.cur)}$("inspectAt").value=now()}
-build();boot();if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js?v=7").catch(function(){});
+build();boot();if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js?v=8").catch(function(){});
